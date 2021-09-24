@@ -20,7 +20,7 @@ species = []
 for i in range(len(species_list)):
     id = id_list[i]
     specie = str(species_list[i]).replace(" ", "-")
-    data = specie + "-" + str(id)
+    data = specie + "-" + str(id).strip()
     species.append([data])
 
 pd.DataFrame(species, columns=["Species"]).to_csv("../data/species.csv", index=False)
