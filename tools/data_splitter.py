@@ -54,11 +54,14 @@ def split(data, labels, train_size, columns, random_state, train_path, test_path
     print(train_df[columns[1]].value_counts())
 
 
-def balanced_split():
-    pass
+def balanced_split(data, labels):
+    for i, d in enumerate(data):
+        print(d, labels[i])
 
 
 columns_ = ["Species", "Label"]
+
+balanced_split(image_files, image_labels)
 
 # Image split
 split(image_files, image_labels, TRAIN_SPLIT, columns_, 200, "../data/training/image/train.csv",

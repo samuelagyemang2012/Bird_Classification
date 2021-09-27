@@ -45,6 +45,13 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="\data\training\image\balanced_train.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="\data\training\image\test.csv">
           <value>
             <Attribute>
@@ -53,6 +60,13 @@
           </value>
         </entry>
         <entry key="\data\training\image\train.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="\data\training\image\train_balanced.csv">
           <value>
             <Attribute>
               <option name="separator" value="," />
