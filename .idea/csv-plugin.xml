@@ -66,13 +66,6 @@
             </Attribute>
           </value>
         </entry>
-        <entry key="\data\training\image\train_balanced.csv">
-          <value>
-            <Attribute>
-              <option name="separator" value="," />
-            </Attribute>
-          </value>
-        </entry>
       </map>
     </option>
   </component>
