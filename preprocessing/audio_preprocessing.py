@@ -3,13 +3,12 @@ import numpy as np
 import matplotlib.pyplot as plt
 import os
 
-
 hop_length_ = 512
 n_fft_ = 2048
 n_mels_ = 128
 
-audio_source = "E:/datasets/birdsounds/training_data/audio/"
-audio_dest = "E:/datasets/birdsounds/training_data/spectrograms/"
+audio_source = "C:/Users/Administrator/Desktop/Sam/Multimodal_Fusion/training_data/new_audio/"
+audio_dest = "C:/Users/Administrator/Desktop/Sam/Multimodal_Fusion/training_data/new_spectograms/"
 
 
 def generate_mel_spectrogram(wav_file, n_fft, hop_length, n_mels, path):

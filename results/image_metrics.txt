@@ -1,0 +1,17 @@
+image
+*Classification Report*
+                   precision    recall  f1-score   support
+
+Fringilla coelebs       0.32      0.79      0.45        39
+      Parus major       0.00      0.00      0.00        19
+  Sylvia communis       0.33      0.04      0.06        28
+    Turdus merula       0.06      0.03      0.04        33
+
+         accuracy                           0.28       119
+        macro avg       0.18      0.22      0.14       119
+     weighted avg       0.20      0.28      0.17       119
+
+Accuracy: 0.27731093764305115
+Recall: 0.2773109243697479
+Precision: 0.2773109243697479
+F1_score: 0.2773109243697479
