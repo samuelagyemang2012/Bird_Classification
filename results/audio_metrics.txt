@@ -13,5 +13,5 @@ Fringilla coelebs       0.50      0.10      0.17        10
 
 Accuracy: 0.20000000298023224
 Recall: 0.2
-Precision: 0.2
-F1_score: 0.20000000000000004
+Precision: 0.41790476190476183
+F1_score: 0.184715821812596

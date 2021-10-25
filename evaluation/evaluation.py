@@ -25,11 +25,11 @@ def show_classification_report(y_test, preds, names):
 
 def get_metrics(acc, y_test, preds):
     data = "Accuracy: " + str(acc[1]) + "\n"
-    recall = recall_score(y_test.argmax(axis=1), preds, average='micro')
+    recall = recall_score(y_test.argmax(axis=1), preds, average='weighted')
     data += 'Recall: ' + str(recall) + "\n"
-    precision = precision_score(y_test.argmax(axis=1), preds, average='micro')
+    precision = precision_score(y_test.argmax(axis=1), preds, average='weighted')
     data += 'Precision: ' + str(precision) + "\n"
-    f1 = f1_score(y_test.argmax(axis=1), preds, average='micro')
+    f1 = f1_score(y_test.argmax(axis=1), preds, average='weighted')
     data += 'F1_score: ' + str(f1) + "\n"
     return data
 

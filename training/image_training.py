@@ -20,7 +20,7 @@ NUM_CLASSES = 4
 VAL_SPLIT = 0.1
 
 # Define paths
-IMG_BASE_PATH = "C:/Users/Administrator/Desktop/Sam/Multimodal Fusion/training_data/images/"
+IMG_BASE_PATH = "C:/Users/Administrator/Desktop/Sam/Multimodal_Fusion/training_data/images/"
 TRAIN_DATA_PATH = "../data/training/image/train.csv"
 TEST_DATA_PATH = "../data/training/image/test.csv"
 # BEST_MODEL_PATH = "../trained_models/"
@@ -122,7 +122,7 @@ callbacks = create_callbacks()  # BEST_MODEL_PATH + name + file_ext, "loss", "mi
 # Building model
 print("Building model")
 input_tensor = Input(shape=INPUT_SHAPE)
-_base = inception(input_tensor, INPUT_SHAPE, 'imagenet')  # None)
+_base = efficient_net(input_tensor, INPUT_SHAPE, 'imagenet')  # None)
 _fully_connected = fully_connected(NUM_CLASSES)
 model = build_model(_base, _fully_connected)
 
