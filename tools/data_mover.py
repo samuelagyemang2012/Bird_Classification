@@ -105,3 +105,36 @@ end = time.time()
 
 print("Took: " + str((end - start)) + "s")
 print("Done")
+
+# Multi
+
+img_df = pd.read_csv('../training_data/all_image_data.csv')
+aud_df = pd.read_csv('../training_data/all_audio_data.csv')
+
+audio_ = []
+all_imgs = []
+imgs_ = []
+labels_ = []
+final = []
+
+for l in selected_species_list:
+    aa = aud_df[aud_df['Label'] == l]["Species"].tolist()
+    ll = aud_df[aud_df['Label'] == l]["Label"].tolist()
+    audio_ += aa
+    labels_ += ll
+
+for a in selected_species_list:
+    ii = img_df[img_df['Label'] == a]["Species"].tolist()
+    all_imgs.append(ii)
+
+for i in range(0, 4):
+    imgs_ += all_imgs[i][0:43]
+
+for j, image in enumerate(imgs_):
+    aud_file = audio_[j].split(".wav")[0]
+    lbl = labels_[j]
+    final.append([image, aud_file + ".png", lbl])
+
+new_df = pd.DataFrame(final, columns=["Image", "Audio", "Label"], index=None)
+new_df.to_csv("../data/training/all_multi_data.csv", index=False)
+print("Done")

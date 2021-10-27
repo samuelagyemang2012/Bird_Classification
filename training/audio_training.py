@@ -13,7 +13,7 @@ random.seed(89)
 seed(25)
 tf.random.set_seed(40)
 
-EPOCHS = 50
+EPOCHS = 10
 INPUT_SHAPE = (150, 150, 3)
 BATCH_SIZE = 8
 NUM_CLASSES = 4

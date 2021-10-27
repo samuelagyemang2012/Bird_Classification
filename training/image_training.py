@@ -13,7 +13,7 @@ random.seed(89)
 seed(25)
 tf.random.set_seed(40)
 
-EPOCHS = 50
+EPOCHS = 10
 INPUT_SHAPE = (150, 150, 3)
 BATCH_SIZE = 4
 NUM_CLASSES = 4
@@ -135,9 +135,9 @@ print("Training model")
 history = model.fit(train_gen,
                     validation_data=val_gen,
                     callbacks=callbacks,
-                    steps_per_epoch=int(len(TRAIN_DATA) // BATCH_SIZE),
+                    # steps_per_epoch=int(len(TRAIN_DATA) // BATCH_SIZE),
                     epochs=EPOCHS)
-
+print(history)
 # Evaluate model
 name = 'image'
 print("Evaluating model")
