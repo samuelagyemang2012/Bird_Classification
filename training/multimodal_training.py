@@ -13,7 +13,7 @@ random.seed(89)
 seed(25)
 tf.random.set_seed(40)
 
-EPOCHS = 50
+EPOCHS = 1
 INPUT_SHAPE = (150, 150, 3)
 BATCH_SIZE = 4
 NUM_CLASSES = 4
@@ -130,28 +130,28 @@ test_datagen = ImageDataGenerator(
     rescale=1. / 255,
 )
 
+
 # Data Augmentation
-# def _generator_three_data_fit(generator, first_data, second_data, third_data, label_data):
-#     first_gen = generator.flow(first_data, label_data, batch_size=batch_size, seed=seed)
-#     second_gen = generator.flow(second_data, label_data, batch_size=batch_size, seed=seed)
-#     third_gen = generator.flow(third_data, label_data, batch_size=batch_size, seed=seed)
+def generator_data_fit(generator, first_data, second_data, labels, subset):
+    first_gen = generator.flow(first_data, labels, batch_size=BATCH_SIZE, subset=subset)
+    second_gen = generator.flow(second_data, labels, batch_size=BATCH_SIZE, subset=subset)
+
+    while True:
+        first_x = first_gen.next()
+        second_x = second_gen.next()
+
+        yield [first_x[0], second_x[0]], first_x[1]
+
+
+# print("Augmenting training data")
+# img_train_gen = train_datagen.flow(IMG_TRAIN_DATA, TRAIN_LABELS, batch_size=BATCH_SIZE, subset='training')
+# aud_train_gen = train_datagen.flow(AUD_TRAIN_DATA, TRAIN_LABELS, batch_size=BATCH_SIZE, subset='training')
 #
-#     while True:
-#         first_x = first_gen.next()
-#         second_x = second_gen.next()
-#         third_x = third_gen.next()
+# img_val_gen = train_datagen.flow(IMG_TRAIN_DATA, TRAIN_LABELS, batch_size=BATCH_SIZE, subset='validation')
+# aud_val_gen = train_datagen.flow(AUD_TRAIN_DATA, TRAIN_LABELS, batch_size=BATCH_SIZE, subset='validation')
 #
-#         yield [first_x[0], second_x[0], third_x[0]], first_x[1]
-
-print("Augmenting training data")
-img_train_gen = train_datagen.flow(IMG_TRAIN_DATA, TRAIN_LABELS, batch_size=BATCH_SIZE, subset='training')
-aud_train_gen = train_datagen.flow(AUD_TRAIN_DATA, TRAIN_LABELS, batch_size=BATCH_SIZE, subset='training')
-
-img_val_gen = train_datagen.flow(IMG_TRAIN_DATA, TRAIN_LABELS, batch_size=BATCH_SIZE, subset='validation')
-aud_val_gen = train_datagen.flow(AUD_TRAIN_DATA, TRAIN_LABELS, batch_size=BATCH_SIZE, subset='validation')
-
-img_test_gen = test_datagen.flow(IMG_TEST_DATA)
-aud_test_gen = test_datagen.flow(AUD_TEST_DATA)
+# img_test_gen = test_datagen.flow(IMG_TEST_DATA)
+# aud_test_gen = test_datagen.flow(AUD_TEST_DATA)
 
 # Setup callbacks
 print("Setting up callbacks")
@@ -162,6 +162,7 @@ callbacks = create_callbacks()  # BEST_MODEL_PATH + name + file_ext, "loss", "mi
 print("Building model")
 input_tensor1 = Input(shape=INPUT_SHAPE)
 input_tensor2 = Input(shape=INPUT_SHAPE)
+
 model = multi_model(input_tensor1, input_tensor2, INPUT_SHAPE, INPUT_SHAPE, 4, 'imagenet')
 
 opts = Adam(learning_rate=0.0001)
@@ -170,24 +171,25 @@ model.compile(optimizer=opts, loss="categorical_crossentropy", metrics=['accurac
 
 # Train model
 print("Training model")
-history = model.fit([img_train_gen, aud_train_gen],
-                    validation_data=[img_val_gen, aud_val_gen],
+history = model.fit(generator_data_fit(train_datagen, IMG_TRAIN_DATA, AUD_TRAIN_DATA, TRAIN_LABELS, 'training'),
+                    validation_data=generator_data_fit(train_datagen, IMG_TRAIN_DATA, AUD_TRAIN_DATA, TRAIN_LABELS,
+                                                       'validation'),
                     callbacks=callbacks,
                     # steps_per_epoch=int(len(IMG_TRAIN_DATA) // BATCH_SIZE),
                     epochs=EPOCHS)
 
 # Evaluate model
-name = 'multi'
-print("Evaluating model")
-acc = model.evaluate([IMG_TEST_DATA, AUD_TEST_DATA], TEST_LABELS, batch_size=BATCH_SIZE)
-preds = model.predict([IMG_TEST_DATA, AUD_TEST_DATA], verbose=0)
-preds = np.argmax(preds, axis=1)
-model_loss_path = "../graphs/" + name + "_loss.png"
-model_acc_path = "../graphs/" + name + "_acc.png"
-model_cm_path = "../graphs/" + name + "_cm.png"
-plot_confusion_matrix(TEST_LABELS, preds, TRUE_LABELS, name, model_cm_path)
-acc_loss_graphs_to_file(name, history, ['train', 'val'], 'upper left', model_loss_path, model_acc_path)
-model_metrics_path = "../results/" + name + "_metrics.txt"
-metrics_to_file(name, model_metrics_path, TEST_LABELS, preds, TRUE_LABELS, acc)
+# name = 'multi'
+# print("Evaluating model")
+# acc = model.evaluate([IMG_TEST_DATA, AUD_TEST_DATA], TEST_LABELS, batch_size=BATCH_SIZE)
+# preds = model.predict([IMG_TEST_DATA, AUD_TEST_DATA], verbose=0)
+# preds = np.argmax(preds, axis=1)
+# model_loss_path = "../graphs/" + name + "_loss.png"
+# model_acc_path = "../graphs/" + name + "_acc.png"
+# model_cm_path = "../graphs/" + name + "_cm.png"
+# plot_confusion_matrix(TEST_LABELS, preds, TRUE_LABELS, name, model_cm_path)
+# acc_loss_graphs_to_file(name, history, ['train', 'val'], 'upper left', model_loss_path, model_acc_path)
+# model_metrics_path = "../results/" + name + "_metrics.txt"
+# metrics_to_file(name, model_metrics_path, TEST_LABELS, preds, TRUE_LABELS, acc)
 
 print("Done!")
