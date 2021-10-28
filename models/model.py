@@ -37,11 +37,11 @@ def fully_connected(num_classes):
 
 def fully_connected2(concat, num_classes):
     z = Flatten()(concat)
-    z = Dense(1024, activation='relu')(concat)
-    z = Dropout(0.2)(concat)
-    z = Dense(1024, activation='relu')(concat)
-    z = Dropout(0.2)(concat)
-    z = Dense(num_classes, activation='softmax')(concat)
+    z = Dense(1024, activation='relu')(z)
+    z = Dropout(0.2)(z)
+    z = Dense(1024, activation='relu')(z)
+    z = Dropout(0.2)(z)
+    z = Dense(num_classes, activation='softmax')(z)
 
     return z
 
@@ -53,17 +53,21 @@ def fully_connected2(concat, num_classes):
 #     x = Dense(8, activation="relu")(inputA)
 #     x = Dense(4, activation="relu")(x)
 #     x = Model(inputs=inputA, outputs=x)
+
 #     # the second branch opreates on the second input
 #     y = Dense(64, activation="relu")(inputB)
 #     y = Dense(32, activation="relu")(y)
 #     y = Dense(4, activation="relu")(y)
 #     y = Model(inputs=inputB, outputs=y)
+
 #     # combine the output of the two branches
 #     combined = Concatenate(axis=1)([x.input, y.input])
+
 #     # apply a FC layer and then a regression prediction on the
 #     # combined outputs
 #     z = Dense(2, activation="relu")(combined)
 #     z = Dense(1, activation="linear")(z)
+
 #     # our model will accept the inputs of the two branches and
 #     # then output a single value
 #     model = Model(inputs=[x.input, y.input], outputs=z)

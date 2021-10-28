@@ -13,9 +13,9 @@ random.seed(89)
 seed(25)
 tf.random.set_seed(40)
 
-EPOCHS = 1
+EPOCHS = 50
 INPUT_SHAPE = (150, 150, 3)
-BATCH_SIZE = 4
+BATCH_SIZE =4
 NUM_CLASSES = 4
 VAL_SPLIT = 0.1
 
@@ -143,6 +143,17 @@ def generator_data_fit(generator, first_data, second_data, labels, subset):
         yield [first_x[0], second_x[0]], first_x[1]
 
 
+def generator_test_data_fit(generator, first_data, second_data, labels):
+    first_gen = generator.flow(first_data, labels, batch_size=BATCH_SIZE)
+    second_gen = generator.flow(second_data, labels, batch_size=BATCH_SIZE)
+
+    while True:
+        first_x = first_gen.next()
+        second_x = second_gen.next()
+
+        yield [first_x[0], second_x[0]], first_x[1]
+
+
 # print("Augmenting training data")
 # img_train_gen = train_datagen.flow(IMG_TRAIN_DATA, TRAIN_LABELS, batch_size=BATCH_SIZE, subset='training')
 # aud_train_gen = train_datagen.flow(AUD_TRAIN_DATA, TRAIN_LABELS, batch_size=BATCH_SIZE, subset='training')
@@ -155,7 +166,6 @@ def generator_data_fit(generator, first_data, second_data, labels, subset):
 
 # Setup callbacks
 print("Setting up callbacks")
-
 callbacks = create_callbacks()  # BEST_MODEL_PATH + name + file_ext, "loss", "min", 5)
 
 # Building model
@@ -171,25 +181,30 @@ model.compile(optimizer=opts, loss="categorical_crossentropy", metrics=['accurac
 
 # Train model
 print("Training model")
-history = model.fit(generator_data_fit(train_datagen, IMG_TRAIN_DATA, AUD_TRAIN_DATA, TRAIN_LABELS, 'training'),
-                    validation_data=generator_data_fit(train_datagen, IMG_TRAIN_DATA, AUD_TRAIN_DATA, TRAIN_LABELS,
-                                                       'validation'),
-                    callbacks=callbacks,
-                    # steps_per_epoch=int(len(IMG_TRAIN_DATA) // BATCH_SIZE),
-                    epochs=EPOCHS)
+history = model.fit(
+    generator_data_fit(train_datagen, IMG_TRAIN_DATA, AUD_TRAIN_DATA, TRAIN_LABELS, 'training'),
+    validation_data=generator_data_fit(train_datagen, IMG_TRAIN_DATA, AUD_TRAIN_DATA, TRAIN_LABELS, 'validation'),
+    callbacks=callbacks,
+    validation_steps=int(len(VAL_SPLIT * IMG_TRAIN_DATA) // BATCH_SIZE),
+    steps_per_epoch=int(len(IMG_TRAIN_DATA) // BATCH_SIZE),
+    epochs=EPOCHS)
 
 # Evaluate model
-# name = 'multi'
-# print("Evaluating model")
-# acc = model.evaluate([IMG_TEST_DATA, AUD_TEST_DATA], TEST_LABELS, batch_size=BATCH_SIZE)
-# preds = model.predict([IMG_TEST_DATA, AUD_TEST_DATA], verbose=0)
-# preds = np.argmax(preds, axis=1)
-# model_loss_path = "../graphs/" + name + "_loss.png"
-# model_acc_path = "../graphs/" + name + "_acc.png"
-# model_cm_path = "../graphs/" + name + "_cm.png"
-# plot_confusion_matrix(TEST_LABELS, preds, TRUE_LABELS, name, model_cm_path)
-# acc_loss_graphs_to_file(name, history, ['train', 'val'], 'upper left', model_loss_path, model_acc_path)
-# model_metrics_path = "../results/" + name + "_metrics.txt"
-# metrics_to_file(name, model_metrics_path, TEST_LABELS, preds, TRUE_LABELS, acc)
+name = 'multi'
+print("Evaluating model")
+acc = model.evaluate(
+    [IMG_TEST_DATA, AUD_TEST_DATA],
+    TEST_LABELS,
+    batch_size=BATCH_SIZE)
+
+preds = model.predict([IMG_TEST_DATA, AUD_TEST_DATA], verbose=0)
+preds = np.argmax(preds, axis=1)
+model_loss_path = "../graphs/" + name + "_loss.png"
+model_acc_path = "../graphs/" + name + "_acc.png"
+model_cm_path = "../graphs/" + name + "_cm.png"
+plot_confusion_matrix(TEST_LABELS, preds, TRUE_LABELS, name, model_cm_path)
+acc_loss_graphs_to_file(name, history, ['train', 'val'], 'upper left', model_loss_path, model_acc_path)
+model_metrics_path = "../results/" + name + "_metrics.txt"
+metrics_to_file(name, model_metrics_path, TEST_LABELS, preds, TRUE_LABELS, acc)
 
 print("Done!")
