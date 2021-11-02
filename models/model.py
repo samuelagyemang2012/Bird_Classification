@@ -1,6 +1,6 @@
 from tensorflow.keras.models import Sequential, Model
 from tensorflow.keras.layers import Flatten, Dense, Input, Dropout, MaxPooling2D, Conv2D, BatchNormalization, \
-    Concatenate
+    Concatenate, Add
 from tensorflow.keras.applications import ResNet50, InceptionV3, EfficientNetB4
 
 
@@ -35,8 +35,8 @@ def fully_connected(num_classes):
     return model
 
 
-def fully_connected2(concat, num_classes):
-    z = Flatten()(concat)
+def fully_connected2(merge, num_classes):
+    z = Flatten()(merge)
     z = Dense(1024, activation='relu')(z)
     z = Dropout(0.2)(z)
     z = Dense(1024, activation='relu')(z)
@@ -46,32 +46,15 @@ def fully_connected2(concat, num_classes):
     return z
 
 
-# def test_model():
-#     inputA = Input(shape=(32,))
-#     inputB = Input(shape=(128,))
-#     # the first branch operates on the first input
-#     x = Dense(8, activation="relu")(inputA)
-#     x = Dense(4, activation="relu")(x)
-#     x = Model(inputs=inputA, outputs=x)
+def build_model(base, forward):
+    model = Sequential()
+    model.add(base)
+    model.add(forward)
+    return model
 
-#     # the second branch opreates on the second input
-#     y = Dense(64, activation="relu")(inputB)
-#     y = Dense(32, activation="relu")(y)
-#     y = Dense(4, activation="relu")(y)
-#     y = Model(inputs=inputB, outputs=y)
 
-#     # combine the output of the two branches
-#     combined = Concatenate(axis=1)([x.input, y.input])
-
-#     # apply a FC layer and then a regression prediction on the
-#     # combined outputs
-#     z = Dense(2, activation="relu")(combined)
-#     z = Dense(1, activation="linear")(z)
-
-#     # our model will accept the inputs of the two branches and
-#     # then output a single value
-#     model = Model(inputs=[x.input, y.input], outputs=z)
-#     return model
+def ssd():
+    pass
 
 
 def multi_model(input_tensor1, input_tensor2, input_shape1, input_shape2, num_classes, weights):
@@ -87,16 +70,9 @@ def multi_model(input_tensor1, input_tensor2, input_shape1, input_shape2, num_cl
     y = base2(input_tensor2)
     y = Model(inputs=input_tensor2, outputs=y)
 
-    concat = Concatenate()([x.output, y.output])
-    fc = fully_connected2(concat, num_classes)
+    merge = Add()([x.output, y.output])
+    fc = fully_connected2(merge, num_classes)
 
     model = Model(inputs=[x.input, y.input], outputs=fc)
 
-    return model
-
-
-def build_model(base, forward):
-    model = Sequential()
-    model.add(base)
-    model.add(forward)
     return model
