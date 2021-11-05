@@ -21,8 +21,12 @@ NUM_CLASSES = 4
 VAL_SPLIT = 0.1
 
 # Define paths
-IMG_BASE_PATH = "D:/Datasets/birdsounds/training_data/images/"
-AUD_BASE_PATH = "D:/Datasets/birdsounds/training_data/audio/spectrograms/"
+IMG_BASE_PATH = "C:/Users/Administrator/Desktop/Sam/Multimodal_Fusion/training_data/images/"
+# "D:/Datasets/birdsounds/training_data/images/"
+
+AUD_BASE_PATH = "C:/Users/Administrator/Desktop/Sam/Multimodal_Fusion/training_data/new_spectograms/"
+# "D:/Datasets/birdsounds/training_data/audio/spectrograms/"
+
 MULTI_TRAIN_DATA_PATH = "../data/training/multi/train.csv"
 MULTI_TEST_DATA_PATH = "../data/training/multi/test.csv"
 

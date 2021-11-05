@@ -53,10 +53,6 @@ def build_model(base, forward):
     return model
 
 
-def ssd():
-    pass
-
-
 def multi_model(input_tensor1, input_tensor2, input_shape1, input_shape2, num_classes, weights):
     base1 = efficient_net(input_tensor1, input_shape1, weights)
     base1._name = 'audio_net'
@@ -76,3 +72,42 @@ def multi_model(input_tensor1, input_tensor2, input_shape1, input_shape2, num_cl
     model = Model(inputs=[x.input, y.input], outputs=fc)
 
     return model
+
+
+# -------------------------------------------------------------------------------------------------------------------
+# Single class detector
+def detection_head1(flatten):
+    bboxHead = Dense(128, activation="relu")(flatten)
+    bboxHead = Dense(64, activation="relu")(bboxHead)
+    bboxHead = Dense(32, activation="relu")(bboxHead)
+    bboxHead = Dense(4, activation="sigmoid")(bboxHead)
+
+    return bboxHead
+
+
+def single_class_detector(model_base, input_tensor, input_shape, weights):
+    if model_base == "resnet":
+        base = resnet_50(input_tensor, input_shape, weights)
+        base.trainable = False
+        return base
+    elif model_base == "inception":
+        base = inception(input_tensor, input_shape, weights)
+        base.trainable = False
+        return base
+    elif model_base == "efficient_net":
+        base = efficient_net(input_tensor, input_shape, weights)
+        base.trainable = False
+        return base
+    else:
+        print("model base not available")
+        return
+
+    # base_output = base.output
+    # flatten = Flatten()(base_output)
+    #
+    # # construct a fully-connected layer header to output the predicted
+    # # bounding box coordinates
+    # det_head = detection_head1(flatten)
+    #
+    # # construct the model we will fine-tune for bounding box regression
+    # model = Model(inputs=base.input, outputs=bboxHead)
