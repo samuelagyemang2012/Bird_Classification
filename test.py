@@ -55,5 +55,26 @@
 
 ##############################################################
 import cv2
+# Bounding Box
 
-path = ""
+from tools.pas_voc_to_yolo import convert_annotation
+import cv2
+
+convert_annotation("C:/Users/Administrator/Desktop/dd/labels/0009.xml",
+                   "C:/Users/Administrator/Desktop/dcdc.txt",
+                   ["bird"])
+
+img_path = "C://Users/Administrator/Desktop/dd/images/0009.jpg"
+img = cv2.imread(img_path)
+h, w = img.shape[:2]
+
+# bbox = (0.416141235813367, 0.7029109589041096, 0.48675914249684743, 0.3613013698630137)
+xy1 = (int(0.416141235813367 * w), int(0.7029109589041096 * h))
+xy2 = (int(0.48675914249684743 * w), int(0.3613013698630137 * h))
+
+x1y1 = (138, 306)  # (0.416141235813367, 0.7029109589041096)
+x2y2 = (524, 517)  # (0.48675914249684743, 0.3613013698630137)
+
+cv2.rectangle(img, xy1, xy2, (255, 0, 0), 2)
+cv2.imshow("Output", img)
+cv2.waitKey(0)
