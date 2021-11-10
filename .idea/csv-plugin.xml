@@ -87,6 +87,20 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="\detector\bboxes\bird\train.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="\detector\bboxes\bird\val.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
       </map>
     </option>
   </component>

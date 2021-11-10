@@ -1,8 +1,11 @@
 import xml.etree.ElementTree as ET
 import os
+import cv2
+import pandas as pd
 
 SOURCE_PATH = "C:/Users/Administrator/Desktop/Sam/Multimodal_Fusion/my_coco/images/val/"
-DEST_PATH = "../detector/"
+SUBSET = "val"
+DETECTOR_PATH = "../detector/bboxes/"
 
 IMAGES = []
 BBOX = []
@@ -24,8 +27,18 @@ def get_bbox(xml_file):
     return x1, y1, x2, y2
 
 
-for file in os.listdir(SOURCE_PATH):
+def show_bbox(image, x1, y1, x2, y2, color, thickness, output_path):
+    image = cv2.rectangle(image, (x1, y1), (x2, y2), color, thickness)
+    cv2.imshow("Output", image)
+    cv2.waitKey(0)
 
+
+def data_to_csv(data, output_file):
+    df = pd.DataFrame(data, index=None, columns=["file", "X1", "Y1", "X2", "Y2", "class"])
+    df.to_csv(output_file, index=False)
+
+
+for file in os.listdir(SOURCE_PATH):
     if file.endswith(".jpg") or file.endswith(".png"):
         IMAGES.append(file)
 
@@ -36,4 +49,8 @@ for file in os.listdir(SOURCE_PATH):
 for i in range(len(BBOX)):
     DATA.append([IMAGES[i], BBOX[i][0], BBOX[i][1], BBOX[i][2], BBOX[i][3], CLASS])
 
-print(DATA)
+if not os.path.isdir(DETECTOR_PATH + CLASS):
+    os.mkdir(DETECTOR_PATH + CLASS)
+    data_to_csv(DATA, DETECTOR_PATH + CLASS + "/" + SUBSET + ".csv")
+else:
+    data_to_csv(DATA, DETECTOR_PATH + CLASS + "/" + SUBSET + ".csv")
