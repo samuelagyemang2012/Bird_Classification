@@ -1,49 +1,64 @@
 from tensorflow.keras.models import Sequential, Model
 from tensorflow.keras.layers import Flatten, Dense, Input, Dropout, MaxPooling2D, Conv2D, BatchNormalization, \
-    Concatenate, Add
+    Concatenate, Add, Activation
 from tensorflow.keras.applications import ResNet50, InceptionV3, EfficientNetB4
 
 
 # Resnet 50
 def resnet_50(input_tensor, input_shape, weights):
     base = ResNet50(weights=weights, input_tensor=input_tensor, include_top=False, input_shape=input_shape)
-    base.trainable = False
+
+    for layer in base.layers:
+        layer.trainable = False
+
     return base
 
 
 def inception(input_tensor, input_shape, weights):
     base = InceptionV3(weights=weights, input_tensor=input_tensor, include_top=False, input_shape=input_shape)
-    base.trainable = False
+
+    for layer in base.layers:
+        layer.trainable = False
+
     return base
 
 
 def efficient_net(input_tensor, input_shape, weights):
     base = EfficientNetB4(weights=weights, input_tensor=input_tensor, include_top=False, input_shape=input_shape)
-    base.trainable = False
+    for layer in base.layers:
+        layer.trainable = False
+
     return base
 
 
-# Feed forward
-def fully_connected(num_classes):
+def FC(num_classes):
     model = Sequential()
     model.add(Flatten())
+    # model.add(Dense(2048, activation='relu'))
     model.add(Dense(1024, activation='relu'))
     model.add(Dropout(0.2))
     model.add(Dense(1024, activation='relu'))
-    model.add(Dropout(0.2))
+    # model.add(Dropout(0.2))
     model.add(Dense(num_classes, activation='softmax'))
     return model
 
 
-def fully_connected2(merge, num_classes):
+def FC2(merge, num_classes):
     z = Flatten()(merge)
     z = Dense(1024, activation='relu')(z)
     z = Dropout(0.2)(z)
     z = Dense(1024, activation='relu')(z)
     z = Dropout(0.2)(z)
     z = Dense(num_classes, activation='softmax')(z)
-
     return z
+
+
+def FC3(model, num_classes):
+    flat1 = Flatten()(model.layers[-1].output)
+    class1 = Dense(128, activation='relu', kernel_initializer='he_uniform')(flat1)
+    output = Dense(num_classes, activation='softmax')(class1)
+
+    return output
 
 
 def build_model(base, forward):
@@ -67,9 +82,45 @@ def multi_model(input_tensor1, input_tensor2, input_shape1, input_shape2, num_cl
     y = Model(inputs=input_tensor2, outputs=y)
 
     merge = Add()([x.output, y.output])
-    fc = fully_connected2(merge, num_classes)
+    fc = FC2(merge, num_classes)
 
     model = Model(inputs=[x.input, y.input], outputs=fc)
+
+    return model
+
+
+def audio_net(input_tensor, num_classes):
+    model = Sequential()
+    # first layer
+    model.add(Dense(100, input_shape=(40,)))
+    model.add(Activation('relu'))
+    model.add(Dropout(0.5))
+    # second layer
+    model.add(Dense(200))
+    model.add(Activation('relu'))
+    model.add(Dropout(0.5))
+    # third layer
+    model.add(Dense(100))
+    model.add(Activation('relu'))
+    model.add(Dropout(0.5))
+
+    # final layer
+    model.add(Dense(num_classes))
+    model.add(Activation('softmax'))
+
+    return model
+
+
+def audio_net2(input_tensor, num_classes):
+    model = Sequential()
+    model.add(Dense(256, input_shape=(40,)))
+    model.add(Activation('relu'))
+    model.add(Dropout(0.5))
+    model.add(Dense(256))
+    model.add(Activation('relu'))
+    model.add(Dropout(0.5))
+    model.add(Dense(num_classes))
+    model.add(Activation('softmax'))
 
     return model
 

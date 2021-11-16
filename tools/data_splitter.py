@@ -70,36 +70,39 @@ def multi_split(data, labels, train_size, columns, random_state, train_path, tes
     print(test_labels.value_counts())
 
 
-audio_path = "../data/training/all_audio_data.csv"
-image_path = "../data/training/all_image_data.csv"
-multi_path = "../data/training/all_multi_data.csv"
-columns_ = ["Species", "Label"]
-columns1_ = ["Image", "Audio", "Label"]
+audio_path = "../data/all_mfcc.csv"
+image_path = "../data/all_image_data.csv"
+
+columns_ = ["file", "class"]
+columns1_ = ["mfcc", "class"]
+columns2_ = ["image", "audio", "class"]
 TRAIN_SPLIT = 0.8
 
 image_df = pd.read_csv(image_path)
 audio_df = pd.read_csv(audio_path)
-multi_df = pd.read_csv(multi_path)
 
-image_files = image_df["Species"].tolist()
-image_labels = image_df["Label"].tolist()
+image_files = image_df["file"].tolist()
+image_labels = image_df["class"].tolist()
 print("Total Images: " + str(len(image_files)))
 
-audio_files = audio_df["Species"].tolist()
-audio_labels = audio_df["Label"].tolist()
+audio_files = audio_df["mfcc"].tolist()
+audio_labels = audio_df["class"].tolist()
 print("Total Audio: " + str(len(audio_files)))
+print("")
 
-multi_files = multi_df[['Image', 'Audio']]
-multi_labels = multi_df['Label']
+# multi_files = multi_df[['Image', 'Audio']]
+# multi_labels = multi_df['Label']
 
 # Image split
-# split(image_files, image_labels, TRAIN_SPLIT, columns_, 200, "../data/training/image/train.csv",
-#       "../data/training/image/test.csv")
+# print("Image Split")
+# split(image_files, image_labels, TRAIN_SPLIT, columns_, 200, "../data/image/train.csv",
+#       "../data/image/test.csv")
 
 # Audio split
-# split(audio_files, audio_labels, TRAIN_SPLIT, columns_, 12, "../data/training/audio/train.csv",
-#       "../data/training/audio/test.csv")
-
-# Multi split
-multi_split(multi_files, multi_labels, TRAIN_SPLIT, columns1_, 12, "../data/training/multi/train.csv",
-            "../data/training/multi/test.csv")
+print("\n" + "Audio Split")
+split(audio_files, audio_labels, TRAIN_SPLIT, columns1_, 12, "../data/audio/train1.csv",
+      "../data/audio/test2.csv")
+#
+# # Multi split
+# # multi_split(multi_files, multi_labels, TRAIN_SPLIT, columns1_, 12, "../data/training/multi/train.csv",
+#             "../data/training/multi/test.csv")
