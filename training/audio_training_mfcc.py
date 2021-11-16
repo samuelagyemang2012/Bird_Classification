@@ -70,10 +70,10 @@ print(train_[0])
 # TEST_DATA = TEST_DATA.astype('float32')
 #
 
-# # One-hot encode labels
-# print("One-hot encoding labels")
-# TRAIN_LABELS = to_categorical(TRAIN_LABELS)
-# TEST_LABELS = to_categorical(TEST_LABELS)
+# One-hot encode labels
+print("One-hot encoding labels")
+TRAIN_LABELS = to_categorical(TRAIN_LABELS)
+TEST_LABELS = to_categorical(TEST_LABELS)
 
 # train_datagen = ImageDataGenerator(
 #     rescale=1. / 255,
