@@ -37,11 +37,11 @@ train_df = pd.read_csv(TRAIN_DATA_PATH)
 test_df = pd.read_csv(TEST_DATA_PATH)
 
 train_ = train_df['mfcc'].tolist()
-train_ = [np.array(trd) for trd in train_]
+train_ = [np.array(trd).astype(np.float32) for trd in train_]
 # train_ = np.array(train_)
 
 test_ = test_df['mfcc'].tolist()
-test_ = [np.array(ttd) for ttd in test_]
+test_ = [np.array(ttd).astype(np.float32) for ttd in test_]
 test_ = np.array(test_)
 
 train_labels_ = train_df['class'].tolist()
