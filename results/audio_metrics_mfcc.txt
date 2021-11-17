@@ -1,0 +1,15 @@
+audio
+*Classification Report*
+              precision    recall  f1-score   support
+
+        bird       0.88      0.89      0.89       227
+         dog       0.85      0.84      0.85       173
+
+    accuracy                           0.87       400
+   macro avg       0.87      0.87      0.87       400
+weighted avg       0.87      0.87      0.87       400
+
+Accuracy: 0.8700000047683716
+Recall: 0.87
+Precision: 0.8698585254986082
+F1_score: 0.869907180742554

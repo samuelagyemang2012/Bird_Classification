@@ -23,7 +23,7 @@ VAL_SPLIT = 0.1
 IMG_BASE_PATH = "C:/Users/Administrator/Desktop/Sam/Multimodal_Fusion/my_coco/all/images/"
 TRAIN_DATA_PATH = "../data/image/train.csv"
 TEST_DATA_PATH = "../data/image/test.csv"
-# BEST_MODEL_PATH = "../trained_models/"
+BEST_MODEL_PATH = "C:/Users/Administrator/Desktop/Sam/Multimodal_Fusion/trained_models/resnet.h5"
 
 TRAIN_DATA = []
 TRAIN_LABELS = []
@@ -149,5 +149,5 @@ plot_confusion_matrix(TEST_LABELS, preds, TRUE_LABELS, name, model_cm_path)
 acc_loss_graphs_to_file(name, history, ['train', 'val'], 'upper left', model_loss_path, model_acc_path)
 model_metrics_path = "../results/" + name + "_metrics.txt"
 metrics_to_file(name, model_metrics_path, TEST_LABELS, preds, TRUE_LABELS, acc)
-
+model.save(BEST_MODEL_PATH)
 print("Done!")

@@ -50,11 +50,11 @@ if MODE == "MFCC":
 
     for b in bird_files:
         mfcc = generate_mfcc(bird_audio_source + b, n_mfcc)
-        MFCC.append([b, np.array(mfcc), "bird"])
+        MFCC.append([b, np.array(mfcc).astype(np.float32), "bird"])
 
     for d in dog_files:
         mfcc = generate_mfcc(dog_audio_source + d, n_mfcc)
-        MFCC.append([d, np.array(mfcc), "dog"])
+        MFCC.append([d, np.array(mfcc).astype(np.float32), "dog"])
 
 all_df = pd.DataFrame(MFCC, index=None, columns=["file", "mfcc", "class"])
 all_df.to_csv("../data/all_mfcc.csv", index=False)

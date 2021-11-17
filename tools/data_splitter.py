@@ -102,7 +102,4 @@ print("")
 print("\n" + "Audio Split")
 split(audio_files, audio_labels, TRAIN_SPLIT, columns1_, 12, "../data/audio/train1.csv",
       "../data/audio/test2.csv")
-#
-# # Multi split
-# # multi_split(multi_files, multi_labels, TRAIN_SPLIT, columns1_, 12, "../data/training/multi/train.csv",
-#             "../data/training/multi/test.csv")
+

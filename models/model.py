@@ -89,10 +89,10 @@ def multi_model(input_tensor1, input_tensor2, input_shape1, input_shape2, num_cl
     return model
 
 
-def audio_net(input_tensor, num_classes):
+def audio_net(input_shape, num_classes):
     model = Sequential()
     # first layer
-    model.add(Dense(100, input_shape=(40,)))
+    model.add(Dense(100, input_shape=input_shape))
     model.add(Activation('relu'))
     model.add(Dropout(0.5))
     # second layer
@@ -111,16 +111,16 @@ def audio_net(input_tensor, num_classes):
     return model
 
 
-def audio_net2(input_tensor, num_classes):
+def audio_net2(input_shape, num_classes):
     model = Sequential()
-    model.add(Dense(256, input_shape=(40,)))
-    model.add(Activation('relu'))
+    model.add(Dense(1024, input_shape=input_shape, activation="relu"))
+    # model.add(Activation('relu'))
     model.add(Dropout(0.5))
-    model.add(Dense(256))
-    model.add(Activation('relu'))
+    model.add(Dense(1024, activation="relu"))  # 256
+    # model.add(Activation('relu'))
     model.add(Dropout(0.5))
-    model.add(Dense(num_classes))
-    model.add(Activation('softmax'))
+    model.add(Dense(num_classes, activation="softmax"))
+    # model.add(Activation('softmax'))
 
     return model
 
