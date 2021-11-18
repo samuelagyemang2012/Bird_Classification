@@ -1,8 +1,4 @@
-import numpy as np
-import pandas as pd
-import cv2
 from tensorflow.keras.optimizers import Adam
-from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from evaluation.evaluation import *
 from tensorflow.keras.utils import to_categorical
 from models.model import *
@@ -14,7 +10,7 @@ random.seed(89)
 seed(25)
 tf.random.set_seed(40)
 
-EPOCHS = 20
+EPOCHS = 200
 INPUT_SHAPE = (40,)
 BATCH_SIZE = 32
 NUM_CLASSES = 2

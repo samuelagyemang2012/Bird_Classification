@@ -44,12 +44,12 @@ def FC(num_classes):
 
 
 def FC2(merge, num_classes):
-    z = Flatten()(merge)
-    z = Dense(1024, activation='relu')(z)
-    z = Dropout(0.2)(z)
-    z = Dense(1024, activation='relu')(z)
-    z = Dropout(0.2)(z)
-    z = Dense(num_classes, activation='softmax')(z)
+    z = Flatten(name='flatten_A')(merge)
+    z = Dense(128, activation='relu', name='dense_X')(z)
+    z = Dropout(0.2, name='dropout_X')(z)
+    z = Dense(128, activation='relu', name='dense_Y')(z)
+    # z = Dropout(0.2, name='dropout_Y')(z)
+    z = Dense(num_classes, activation='softmax', name='dense_Z')(z)
     return z
 
 
@@ -89,38 +89,42 @@ def multi_model(input_tensor1, input_tensor2, input_shape1, input_shape2, num_cl
     return model
 
 
+def multi_model2(audionet, resnet, num_classes):
+    # audionet._name = 'audionet'
+    # resnet._name = 'resnet'
+    merge = Add(name='merge_A')([audionet.output, resnet.output])
+    fc = FC2(merge, num_classes)
+    model = Model(inputs=[audionet.input, resnet.input], outputs=fc)
+    return model
+
+
 def audio_net(input_shape, num_classes):
     model = Sequential()
+
     # first layer
-    model.add(Dense(100, input_shape=input_shape))
-    model.add(Activation('relu'))
+    model.add(Dense(100, activation='relu', input_shape=input_shape))
     model.add(Dropout(0.5))
     # second layer
-    model.add(Dense(200))
-    model.add(Activation('relu'))
+    model.add(Dense(200, activation='relu'))
     model.add(Dropout(0.5))
     # third layer
-    model.add(Dense(100))
-    model.add(Activation('relu'))
+    model.add(Dense(100, activation='relu'))
     model.add(Dropout(0.5))
-
     # final layer
-    model.add(Dense(num_classes))
-    model.add(Activation('softmax'))
+    model.add(Dense(num_classes, activation='softmax'))
 
     return model
 
 
 def audio_net2(input_shape, num_classes):
     model = Sequential()
-    model.add(Dense(1024, input_shape=input_shape, activation="relu"))
-    # model.add(Activation('relu'))
-    model.add(Dropout(0.5))
-    model.add(Dense(1024, activation="relu"))  # 256
-    # model.add(Activation('relu'))
-    model.add(Dropout(0.5))
-    model.add(Dense(num_classes, activation="softmax"))
-    # model.add(Activation('softmax'))
+    model.add(Dense(1024, activation="relu", input_shape=input_shape, name='dense_A'))
+    model.add(Dropout(0.5, name='dropout_A'))
+    model.add(Dense(1024, activation="relu", name='dense_B'))
+    model.add(Dropout(0.5, name='dropout_B'))
+    model.add(Dense(128, activation="relu", name='dense_C'))
+    model.add(Dropout(0.5, name='dropout_C'))
+    model.add(Dense(num_classes, activation="softmax", name='dense_D'))
 
     return model
 

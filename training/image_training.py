@@ -1,6 +1,5 @@
-import pandas as pd
 import cv2
-from tensorflow.keras.optimizers import Adam, Nadam
+from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from evaluation.evaluation import *
 from tensorflow.keras.utils import to_categorical
@@ -113,7 +112,7 @@ print("Building model")
 input_tensor = Input(shape=INPUT_SHAPE)
 
 _base = resnet_50(input_tensor, INPUT_SHAPE, 'imagenet')  # None)
-flat1 = Flatten()(_base.layers[-1].output)
+flat1 = Flatten(name='dasda')(_base.layers[-1].output)
 class1 = Dense(128, activation='relu', kernel_initializer='he_uniform')(flat1)
 # class2 = Dense(64, activation='relu', kernel_initializer='he_uniform')(class1)
 output = Dense(NUM_CLASSES, activation='softmax')(class1)
@@ -137,9 +136,7 @@ history = model.fit_generator(train_gen,
 # Evaluate model
 name = 'image'
 print("Evaluating model on " + str(len(TEST_DATA)) + " images")
-
 acc = model.evaluate(TEST_DATA, TEST_LABELS, batch_size=BATCH_SIZE)
-
 preds = model.predict(TEST_DATA, verbose=0)
 preds = np.argmax(preds, axis=1)
 model_loss_path = "../graphs/" + name + "_loss.png"
