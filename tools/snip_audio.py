@@ -1,7 +1,7 @@
 import os
 
-audio_source = "C:/Users/Administrator/Desktop/Sam/Multimodal_Fusion/my_coco/bird/audio/wav_files/"
-audio_dest = "C:/Users/Administrator/Desktop/Sam/Multimodal_Fusion/my_coco/bird/audio/clipped_wav/"
+audio_source = "C:/Users/Administrator/Desktop/Sam/Multimodal_Fusion/my_coco/audio/car/wav_files/"
+audio_dest = "C:/Users/Administrator/Desktop/Sam/Multimodal_Fusion/my_coco/audio/car/clipped_wav/"
 
 data = os.listdir(audio_source)
 

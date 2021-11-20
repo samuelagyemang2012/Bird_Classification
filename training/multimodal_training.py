@@ -14,10 +14,10 @@ random.seed(89)
 seed(25)
 tf.random.set_seed(40)
 
-EPOCHS = 9
+EPOCHS = 25
 INPUT_SHAPE_1 = (100, 100, 3)
 BATCH_SIZE = 16
-NUM_CLASSES = 2
+NUM_CLASSES = 3
 VAL_SPLIT = 0.1
 
 # Define paths
@@ -26,8 +26,8 @@ MULTI_TRAIN_DATA_PATH = "../data/multi/train.csv"
 MULTI_TEST_DATA_PATH = "../data/multi/test.csv"
 BEST_MODEL_PATH = "C:/Users/Administrator/Desktop/Sam/Multimodal_Fusion/trained_models/multimodal.h5"
 
-TRUE_LABELS = ["bird", "dog"]
-LABELS = [0, 1]
+TRUE_LABELS = ["bird", "dog", "car"]
+LABELS = [0, 1, 2]
 
 IMG_TRAIN_DATA = []
 IMG_TEST_DATA = []
@@ -65,6 +65,9 @@ for trl in train_labels_:
     if trl == TRUE_LABELS[1]:
         TRAIN_LABELS.append(1)
 
+    if trl == TRUE_LABELS[2]:
+        TRAIN_LABELS.append(2)
+
 print("Resize test images")
 for tt in range(len(test_img)):
     img = cv2.imread(IMG_BASE_PATH + test_img[tt])
@@ -77,6 +80,9 @@ for ttl in test_labels_:
 
     if ttl == TRUE_LABELS[1]:
         TEST_LABELS.append(1)
+
+    if ttl == TRUE_LABELS[2]:
+        TEST_LABELS.append(2)
 
 print("Preprocess MFCCs")
 AUD_TRAIN_DATA = [np.array(t.replace("[", "").replace("]", "").replace("\n", "").split()).astype(np.float32) for t in
@@ -103,6 +109,7 @@ AUD_TEST_DATA = AUD_TEST_DATA.astype('float32')
 print("One-hot encoding labels")
 TRAIN_LABELS = to_categorical(TRAIN_LABELS)
 TEST_LABELS = to_categorical(TEST_LABELS)
+
 
 # train_datagen = ImageDataGenerator(
 #     rescale=1. / 255,
@@ -169,6 +176,7 @@ resnet = load_model(image_model_path)
 resnet.trainable = False
 resnet = Model(resnet.inputs, resnet.layers[-2].output)
 
+# retrian
 # audionet = audio_net2((40,), 2)
 # audionet = Model(audionet.inputs, audionet.layers[-2].output)
 #
@@ -178,7 +186,7 @@ resnet = Model(resnet.inputs, resnet.layers[-2].output)
 # class1 = Dense(128, activation='relu', kernel_initializer='he_uniform')(flat1)
 # resnet = Model(inputs=_base.inputs, outputs=class1)
 
-model = multi_model2(audionet, resnet, 2)
+model = multi_model2(audionet, resnet, NUM_CLASSES)
 opts = Adam(learning_rate=0.0001)
 
 model.compile(optimizer=opts, loss="categorical_crossentropy", metrics=['accuracy'])

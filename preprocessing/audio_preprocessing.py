@@ -13,6 +13,8 @@ audio_source = "C:/Users/Administrator/Desktop/Sam/Multimodal_Fusion/my_coco/bir
 audio_dest = "C:/Users/Administrator/Desktop/Sam/Multimodal_Fusion/my_coco/bird/audio/spectrograms/"
 MODE = "MFCC"  # MFCC
 
+MFCC = []
+
 
 def generate_mel_spectrogram(wav_file, n_fft, hop_length, n_mels, path):
     samples, sample_rate = librosa.load(wav_file)
@@ -32,29 +34,36 @@ def generate_mfcc(wav_file, n_mfcc):
     return scaled_mfcc
 
 
-MFCC = []
-wav_files = os.listdir(audio_source)
-
 if MODE == "SPEC":
+    wav_files = os.listdir(audio_source)
     for w in wav_files:
         path = audio_dest + w.split(".")[0] + ".png"
         generate_mel_spectrogram(audio_source + w, n_fft_, hop_length_, n_mels_, path)
 
 if MODE == "MFCC":
-    bird_audio_source = "C:/Users/Administrator/Desktop/Sam/Multimodal_Fusion/my_coco/bird/audio/clipped_wav/"
-    dog_audio_source = "C:/Users/Administrator/Desktop/Sam/Multimodal_Fusion/my_coco/dog/audio/clipped_wav/"
+    bird_audio_source = "C:/Users/Administrator/Desktop/Sam/Multimodal_Fusion/my_coco/audio/bird/clipped_wav/"
+    dog_audio_source = "C:/Users/Administrator/Desktop/Sam/Multimodal_Fusion/my_coco/audio/dog/clipped_wav/"
+    car_audio_source = "C:/Users/Administrator/Desktop/Sam/Multimodal_Fusion/my_coco/audio/car/clipped_wav/"
 
     bird_files = os.listdir(bird_audio_source)
     dog_files = os.listdir(dog_audio_source)
+    car_files = os.listdir(car_audio_source)
     MFCC = []
 
     for b in bird_files:
         mfcc = generate_mfcc(bird_audio_source + b, n_mfcc)
         MFCC.append([b, np.array(mfcc).astype(np.float32), "bird"])
+    print("bird mfcc complete")
 
     for d in dog_files:
         mfcc = generate_mfcc(dog_audio_source + d, n_mfcc)
         MFCC.append([d, np.array(mfcc).astype(np.float32), "dog"])
+    print("dog mfcc complete")
+
+    for c in car_files:
+        mfcc = generate_mfcc(car_audio_source + c, n_mfcc)
+        MFCC.append([c, np.array(mfcc).astype(np.float32), "car"])
+    print("car mfcc complete")
 
 all_df = pd.DataFrame(MFCC, index=None, columns=["file", "mfcc", "class"])
 all_df.to_csv("../data/all_mfcc.csv", index=False)

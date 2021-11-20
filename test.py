@@ -160,45 +160,65 @@
 #
 # print("done")
 
-from tensorflow.keras.models import load_model
-from tensorflow.keras.models import Model
-import numpy as np
+# from tensorflow.keras.models import load_model
+# from tensorflow.keras.models import Model
+# import numpy as np
+#
+# audionet_model_path = "C:/Users/Administrator/Desktop/Sam/Multimodal_Fusion/trained_models/audionet.h5"
+# image_model_path = "C:/Users/Administrator/Desktop/Sam/Multimodal_Fusion/trained_models/resnet.h5"
+#
+# audionet = load_model(audionet_model_path)
+# resnet = load_model(image_model_path)
+#
+# # extract = Model(model.inputs, model.layers[-3].output) # Dense(128,...)
+# # features = extract.predict(data)
+# print("before")
+# print(audionet.summary())
+# layers = audionet.layers[0: len(audionet.layers) - 1]
+#
+# print("after")
+# audionet2 = Model(audionet.inputs, audionet.layers[-2].output)
+# print(audionet2.summary())
+#
+# mfcc = '''[-4.9353143e+02  1.5473961e+02  8.1852407e+00  4.2252598e+00
+#   1.4097309e+01  1.6809113e+01  4.7005630e+00  1.1184429e+01
+#   5.8361278e+00  1.3143874e+01  1.1879518e+01  1.6093502e+01
+#   1.7254227e+00  5.4016829e+00  1.3161260e+00  5.3889580e+00
+#  -3.1956949e+00  5.0678639e+00  3.0815611e+00  4.4254055e+00
+#   1.3268406e+00  7.5907140e+00  1.8249539e+00  5.4979773e+00
+#  -2.3596996e-02  3.0480835e+00 -6.0524902e+00 -3.8193123e+00
+#  -2.8671663e+00  5.4725003e+00 -3.9062312e-01  2.7307472e-01
+#  -5.3830819e+00  1.3945873e+00  4.8293778e-01  2.5882666e+00
+#  -5.3621507e+00 -1.8952858e+00 -4.5658431e+00  6.1807925e-01]'''
+#
+# mfcc = mfcc.replace("[", "").replace("]", "")
+# mfcc = mfcc.replace("\n", "")
+# mfcc = mfcc.split()
+# mfcc = np.array(mfcc).astype(np.float32)
+# mfcc = mfcc.reshape(1, 40)
+#
+# a1_pred = audionet.predict(mfcc.reshape(1, 40))
+# a2_pred = audionet2.predict(mfcc.reshape(1, 40))
+#
+# print("audionet1 pred: ", a1_pred)
+# print("audionet2 features: ", a2_pred)
 
-audionet_model_path = "C:/Users/Administrator/Desktop/Sam/Multimodal_Fusion/trained_models/audionet.h5"
-image_model_path = "C:/Users/Administrator/Desktop/Sam/Multimodal_Fusion/trained_models/resnet.h5"
+############################################################
+# Rename files
+import os
+import shutil
+import pandas as pd
 
-audionet = load_model(audionet_model_path)
-resnet = load_model(image_model_path)
+data_path = "C:/Users/Administrator/Desktop/car_audio.csv"
+audio_source = "C:/Users/Administrator/Desktop/datasets/urban8k/"
+dest = "C:/Users/Administrator/Desktop/Sam/Multimodal_Fusion/my_coco/audio/car/wav_files/"
 
-# extract = Model(model.inputs, model.layers[-3].output) # Dense(128,...)
-# features = extract.predict(data)
-print("before")
-print(audionet.summary())
-layers = audionet.layers[0: len(audionet.layers) - 1]
+df = pd.read_csv(data_path)
+cc = df[['slice_file_name', 'fold']]
 
-print("after")
-audionet2 = Model(audionet.inputs, audionet.layers[-2].output)
-print(audionet2.summary())
+files = cc["slice_file_name"].tolist()
+folds = cc["fold"].tolist()
 
-mfcc = '''[-4.9353143e+02  1.5473961e+02  8.1852407e+00  4.2252598e+00
-  1.4097309e+01  1.6809113e+01  4.7005630e+00  1.1184429e+01
-  5.8361278e+00  1.3143874e+01  1.1879518e+01  1.6093502e+01
-  1.7254227e+00  5.4016829e+00  1.3161260e+00  5.3889580e+00
- -3.1956949e+00  5.0678639e+00  3.0815611e+00  4.4254055e+00
-  1.3268406e+00  7.5907140e+00  1.8249539e+00  5.4979773e+00
- -2.3596996e-02  3.0480835e+00 -6.0524902e+00 -3.8193123e+00
- -2.8671663e+00  5.4725003e+00 -3.9062312e-01  2.7307472e-01
- -5.3830819e+00  1.3945873e+00  4.8293778e-01  2.5882666e+00
- -5.3621507e+00 -1.8952858e+00 -4.5658431e+00  6.1807925e-01]'''
-
-mfcc = mfcc.replace("[", "").replace("]", "")
-mfcc = mfcc.replace("\n", "")
-mfcc = mfcc.split()
-mfcc = np.array(mfcc).astype(np.float32)
-mfcc = mfcc.reshape(1, 40)
-
-a1_pred = audionet.predict(mfcc.reshape(1, 40))
-a2_pred = audionet2.predict(mfcc.reshape(1, 40))
-
-print("audionet1 pred: ", a1_pred)
-print("audionet2 features: ", a2_pred)
+for i, z in enumerate(files):
+    full_path = audio_source + "fold" + str(folds[i]) + "/" + z
+    shutil.copy(full_path, dest)

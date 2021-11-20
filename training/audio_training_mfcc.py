@@ -10,23 +10,22 @@ random.seed(89)
 seed(25)
 tf.random.set_seed(40)
 
-EPOCHS = 200
+EPOCHS = 180  # 200
 INPUT_SHAPE = (40,)
 BATCH_SIZE = 32
-NUM_CLASSES = 2
+NUM_CLASSES = 3
 VAL_SPLIT = 0.2
 
 # Define paths
-IMG_BASE_PATH = "C:/Users/Administrator/Desktop/Sam/Multimodal_Fusion/my_coco/all/audio/"
-TRAIN_DATA_PATH = "../data/audio/train1.csv"
-TEST_DATA_PATH = "../data/audio/test2.csv"
+TRAIN_DATA_PATH = "../data/audio/train.csv"
+TEST_DATA_PATH = "../data/audio/test.csv"
 BEST_MODEL_PATH = "C:/Users/Administrator/Desktop/Sam/Multimodal_Fusion/trained_models/audionet.h5"
 
 TRAIN_LABELS = []
 TEST_LABELS = []
 
-TRUE_LABELS = ["bird", "dog"]
-LABELS = [0, 1]
+TRUE_LABELS = ["bird", "dog", "car"]
+LABELS = [0, 1, 2]
 
 # Load data
 print("Loading training data")
@@ -45,14 +44,22 @@ test_labels_ = test_df['class'].tolist()
 for tl in train_labels_:
     if tl == 'bird':
         TRAIN_LABELS.append(0)
-    else:
+
+    if tl == 'dog':
         TRAIN_LABELS.append(1)
+
+    if tl == 'car':
+        TRAIN_LABELS.append(2)
 
 for tt in test_labels_:
     if tt == 'bird':
         TEST_LABELS.append(0)
-    else:
+
+    if tt == 'dog':
         TEST_LABELS.append(1)
+
+    if tt == 'car':
+        TEST_LABELS.append(2)
 
 # Normalize data
 print("Normalizing data")
@@ -74,7 +81,7 @@ callbacks = create_callbacks()  # BEST_MODEL_PATH + name + file_ext, "loss", "mi
 
 # Building model
 print("Building model")
-model = audio_net2(INPUT_SHAPE, 2)
+model = audio_net2(INPUT_SHAPE, NUM_CLASSES)
 opts = Adam(learning_rate=0.0001)
 model.compile(optimizer=opts, loss="categorical_crossentropy", metrics=['accuracy'])
 

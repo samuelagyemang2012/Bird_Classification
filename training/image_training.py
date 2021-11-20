@@ -1,6 +1,8 @@
 import cv2
-from tensorflow.keras.optimizers import Adam
+from tensorflow.keras.optimizers import Adam, SGD
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
+from tensorflow.python.keras.layers import GlobalAveragePooling2D, MaxPooling2D
+
 from evaluation.evaluation import *
 from tensorflow.keras.utils import to_categorical
 from models.model import *
@@ -12,11 +14,11 @@ random.seed(89)
 seed(25)
 tf.random.set_seed(40)
 
-EPOCHS = 70
+EPOCHS = 20
 INPUT_SHAPE = (100, 100, 3)
 BATCH_SIZE = 16
-NUM_CLASSES = 2
-VAL_SPLIT = 0.1
+NUM_CLASSES = 3
+VAL_SPLIT = 0.2
 
 # Define paths
 IMG_BASE_PATH = "C:/Users/Administrator/Desktop/Sam/Multimodal_Fusion/my_coco/all/images/"
@@ -29,8 +31,8 @@ TRAIN_LABELS = []
 TEST_DATA = []
 TEST_LABELS = []
 
-TRUE_LABELS = ["bird", "dog"]
-LABELS = [0, 1]
+TRUE_LABELS = ["bird", "dog", "car"]
+LABELS = [0, 1, 2]
 
 # Load data
 print("Loading training data")
@@ -57,6 +59,9 @@ for trl in train_labels_:
     if trl == TRUE_LABELS[1]:
         TRAIN_LABELS.append(1)
 
+    if trl == TRUE_LABELS[2]:
+        TRAIN_LABELS.append(2)
+
 # Resize test images
 print("Resize test images")
 for tt in test_:
@@ -70,6 +75,9 @@ for ttl in test_labels_:
 
     if ttl == TRUE_LABELS[1]:
         TEST_LABELS.append(1)
+
+    if ttl == TRUE_LABELS[2]:
+        TEST_LABELS.append(2)
 
 # Normalize data
 print("Normalizing data")
@@ -88,12 +96,13 @@ train_datagen = ImageDataGenerator(
     rescale=1.0 / 255.0,
     width_shift_range=0.1,
     height_shift_range=0.1,
+    rotation_range=20,
     horizontal_flip=True,
     validation_split=VAL_SPLIT,
 )
 
 test_datagen = ImageDataGenerator(
-    rescale=1. / 255,
+    rescale=1.0 / 255.0,
 )
 
 # Data Augmentation
@@ -111,27 +120,29 @@ callbacks = create_callbacks()  # BEST_MODEL_PATH + name + file_ext, "loss", "mi
 print("Building model")
 input_tensor = Input(shape=INPUT_SHAPE)
 
-_base = resnet_50(input_tensor, INPUT_SHAPE, 'imagenet')  # None)
-flat1 = Flatten(name='dasda')(_base.layers[-1].output)
-class1 = Dense(128, activation='relu', kernel_initializer='he_uniform')(flat1)
-# class2 = Dense(64, activation='relu', kernel_initializer='he_uniform')(class1)
-output = Dense(NUM_CLASSES, activation='softmax')(class1)
-model = Model(inputs=_base.inputs, outputs=output)
+model = cnn(INPUT_SHAPE, NUM_CLASSES)
 
-# model = Model(inputs=model.inputs, outputs=output)
-# _fully_connected = FC3(_base, NUM_CLASSES)
-# model = build_model(_base, _fully_connected)
+# base_ = resnet_50(input_tensor, INPUT_SHAPE, 'imagenet')
+# x = Dense(NUM_CLASSES, activation='softmax', name='dense_Q')(base_.output)
+# model = Model(inputs=base_.input, outputs=x)
+
+# x = MaxPooling2D(name='avg_pool_B')(x)
+# x = Flatten(name='flatten_X')(x)
+# x = Dense(1024, activation='relu', name='dense_Q')(x)
+# x = Dropout(0.2, name='dropout_E')(x)
+# x = Dense(256, activation='relu', name='dense_W')(x)
+# # x = Dense(128, activation='relu', name='dense_R')(x)
 
 opts = Adam(learning_rate=0.0001)
 model.compile(optimizer=opts, loss="categorical_crossentropy", metrics=['accuracy'])
-#
-# # Train model
+
+# Train model
 print("Training model")
-history = model.fit_generator(train_gen,
-                              validation_data=val_gen,
-                              # callbacks=callbacks,
-                              # steps_per_epoch=len(TRAIN_DATA) // BATCH_SIZE,
-                              epochs=EPOCHS)
+history = model.fit(train_gen,
+                    validation_data=val_gen,
+                    # callbacks=callbacks,
+                    # steps_per_epoch=len(TRAIN_DATA) // BATCH_SIZE,
+                    epochs=EPOCHS)
 
 # Evaluate model
 name = 'image'

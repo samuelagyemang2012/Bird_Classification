@@ -19,7 +19,7 @@ resnet2 = Model(resnet.inputs, resnet.layers[-2].output)
 
 multi_model = load_model(multi_model_path)
 
-labels = ["bird", "dog"]
+labels = ["bird", "dog", "car"]
 
 print("*********************************************************")
 
@@ -54,7 +54,7 @@ print("confidence: ", round((a1_pred.max() * 100), 2))
 
 ###################################################################################
 img_path = "C:/Users/Administrator/Desktop/Sam/Multimodal_Fusion/my_coco/all/images/n02085782_82.jpg"
-img_path = "C:/Users/Administrator/Desktop/German-shepherd.jpg"
+# img_path = "C:/Users/Administrator/Desktop/German-shepherd.jpg"
 img = cv2.imread(img_path)
 img = cv2.resize(img, (100, 100), cv2.INTER_LINEAR)
 img = img / 255.0
@@ -73,55 +73,61 @@ print("confidence: ", round((m_pred.max() * 100), 2))
 print("")
 ####################################################################################
 # Multimodal prediction
+
 #
-3
-# df = pd.read_csv('../data/multi/test.csv')
-#
-# mfccs = df['mfcc'].tolist()
-# images = df['image'].tolist()
-# true_labels = df['class'].tolist()
-# img_base = "C:/Users/Administrator/Desktop/Sam/Multimodal_Fusion/my_coco/all/images/"
-#
-# total1 = 0
-# total2 = 0
-# total3 = 0
-#
-# for i, m in tqdm(enumerate(mfccs)):
-#     m = m.replace("[", "").replace("]", "")
-#     m = m.replace("\n", "")
-#     m = m.split()
-#     m = np.array(m).astype(np.float32)
-#     m = m.reshape(1, 40)
-#
-#     image_path = img_base + images[i]
-#     img = cv2.imread(image_path)
-#     img = cv2.resize(img, (100, 100), cv2.INTER_LINEAR)
-#     img = img / 255.0
-#     img = np.array(img)
-#     img = img.reshape(1, 100, 100, 3)
-#
-#     multi_pred = multi_model.predict([m, img])
-#     img_pred = resnet.predict(img)
-#     a1_pred = audionet.predict(m)
-#
-#     m_pred1 = labels[multi_pred.argmax()]
-#     i_pred1 = labels[img_pred.argmax()]
-#     a_pred1 = labels[a1_pred.argmax()]
-#     true_label = true_labels[i]
-#
-#     if m_pred1 == true_label:
-#         total1 += 1
-#
-#     if i_pred1 == true_label:
-#         total2 += 1
-#
-#     if a_pred1 == true_label:
-#         total3 += 1
-#     print("predicted: ", labels[multi_pred.argmax()])
-#     print("true label: ", true_labels[i])
-#     print("confidence: ", round((multi_pred.max() * 100), 2))
-#     # print("------------------------------")
-#
-# print("multi score: " + str(total1) + "/" + str(len(true_labels)))
-# print("image score: " + str(total2) + "/" + str(len(true_labels)))
-# print("audio score: " + str(total3) + "/" + str(len(true_labels)))
+df = pd.read_csv('../data/multi/test.csv')
+
+mfccs = df['mfcc'].tolist()
+images = df['image'].tolist()
+true_labels = df['class'].tolist()
+img_base = "C:/Users/Administrator/Desktop/Sam/Multimodal_Fusion/my_coco/all/images/"
+
+total1 = 0
+total2 = 0
+total3 = 0
+
+for i, m in tqdm(enumerate(mfccs)):
+    m = m.replace("[", "").replace("]", "")
+    m = m.replace("\n", "")
+    m = m.split()
+    m = np.array(m).astype(np.float32)
+    m = m.reshape(1, 40)
+
+    image_path = img_base + images[i]
+    img = cv2.imread(image_path)
+    img = cv2.resize(img, (100, 100), cv2.INTER_LINEAR)
+    img = img / 255.0
+    img = np.array(img)
+    img = img.reshape(1, 100, 100, 3)
+
+    multi_pred = multi_model.predict([m, img])
+    img_pred = resnet.predict(img)
+    a1_pred = audionet.predict(m)
+
+    m_pred1 = labels[multi_pred.argmax()]
+    m_conf = round((multi_pred.max() * 100), 2)
+
+    i_pred1 = labels[img_pred.argmax()]
+    i_conf = round((img_pred.max() * 100), 2)
+
+    a_pred1 = labels[a1_pred.argmax()]
+    a_conf = round((a1_pred.max() * 100), 2)
+
+    true_label = true_labels[i]
+
+    if m_pred1 == true_label and m_conf > 50.0:
+        total1 += 1
+
+    if i_pred1 == true_label and i_conf > 50.0:
+        total2 += 1
+
+    if a_pred1 == true_label and a_conf > 50.0:
+        total3 += 1
+    print("predicted: ", labels[multi_pred.argmax()])
+    print("true label: ", true_labels[i])
+    print("confidence: ", round((multi_pred.max() * 100), 2))
+    # print("------------------------------")
+
+print("multi score: " + str(total1) + "/" + str(len(true_labels)))
+print("image score: " + str(total2) + "/" + str(len(true_labels)))
+print("audio score: " + str(total3) + "/" + str(len(true_labels)))

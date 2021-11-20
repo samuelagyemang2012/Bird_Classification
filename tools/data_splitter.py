@@ -75,7 +75,7 @@ image_path = "../data/all_image_data.csv"
 
 columns_ = ["file", "class"]
 columns1_ = ["mfcc", "class"]
-columns2_ = ["image", "audio", "class"]
+
 TRAIN_SPLIT = 0.8
 
 image_df = pd.read_csv(image_path)
@@ -94,12 +94,12 @@ print("")
 # multi_labels = multi_df['Label']
 
 # Image split
-# print("Image Split")
-# split(image_files, image_labels, TRAIN_SPLIT, columns_, 200, "../data/image/train.csv",
-#       "../data/image/test.csv")
+print("Image Split")
+split(image_files, image_labels, TRAIN_SPLIT, columns_, 200, "../data/image/train.csv",
+      "../data/image/test.csv")
 
 # Audio split
 print("\n" + "Audio Split")
-split(audio_files, audio_labels, TRAIN_SPLIT, columns1_, 12, "../data/audio/train1.csv",
-      "../data/audio/test2.csv")
+split(audio_files, audio_labels, TRAIN_SPLIT, columns1_, 12, "../data/audio/train.csv",
+      "../data/audio/test.csv")
 

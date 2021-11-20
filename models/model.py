@@ -1,6 +1,6 @@
 from tensorflow.keras.models import Sequential, Model
 from tensorflow.keras.layers import Flatten, Dense, Input, Dropout, MaxPooling2D, Conv2D, BatchNormalization, \
-    Concatenate, Add, Activation
+    Concatenate, Add, Activation, GlobalAvgPool2D
 from tensorflow.keras.applications import ResNet50, InceptionV3, EfficientNetB4
 
 
@@ -31,40 +31,28 @@ def efficient_net(input_tensor, input_shape, weights):
     return base
 
 
-def FC(num_classes):
+def cnn(input_shape, num_classes):
     model = Sequential()
-    model.add(Flatten())
-    # model.add(Dense(2048, activation='relu'))
-    model.add(Dense(1024, activation='relu'))
-    model.add(Dropout(0.2))
-    model.add(Dense(1024, activation='relu'))
-    # model.add(Dropout(0.2))
-    model.add(Dense(num_classes, activation='softmax'))
-    return model
+    model.add(Conv2D(32, (3, 3), activation='relu', input_shape=input_shape, name='Conv_A'))
+    model.add(MaxPooling2D((2, 2), name="Max_A"))
+    model.add(Conv2D(64, (3, 3), activation='relu', padding='same', name='Conv_B'))
+    model.add(MaxPooling2D((2, 2), strides=(1, 1), padding='same', name="Max_B"))
+    model.add(Conv2D(64, (3, 3), activation='relu', padding='same', name='Conv_C'))
+    model.add(MaxPooling2D((2, 2), strides=(1, 1), padding='same', name='Max_C'))
+    model.add(Conv2D(64, (3, 3), activation='relu', padding='same', name='Conv_D'))
+    model.add(MaxPooling2D((2, 2), strides=(1, 1), padding='same', name='Max_D'))
+    model.add(Conv2D(64, (3, 3), activation='relu', padding='same', name='Conv_E'))
+    model.add(MaxPooling2D((2, 2), strides=(1, 1), padding='same', name='Max_E'))
+    model.add(Conv2D(64, (3, 3), activation='relu', padding='same', name='Conv_F'))
+    model.add(MaxPooling2D((2, 2), strides=(1, 1), padding='same', name='Max_F'))
+    model.add(Conv2D(64, (3, 3), activation='relu', padding='same', name='Conv_G'))
+    model.add(MaxPooling2D((2, 2), strides=(1, 1), padding='same', name='Max_G'))
+    model.add(Flatten(name='Flatten_A'))
+    # model.add(Dropout(0.2, name="Dropout_A"))
+    model.add(Dense(64, activation='relu', name='Dense_A'))
+    # model.add(Dense(128, activation='relu', name='Dense_A'))
+    model.add(Dense(num_classes, activation='softmax', name='Dense_B'))
 
-
-def FC2(merge, num_classes):
-    z = Flatten(name='flatten_A')(merge)
-    z = Dense(128, activation='relu', name='dense_X')(z)
-    z = Dropout(0.2, name='dropout_X')(z)
-    z = Dense(128, activation='relu', name='dense_Y')(z)
-    # z = Dropout(0.2, name='dropout_Y')(z)
-    z = Dense(num_classes, activation='softmax', name='dense_Z')(z)
-    return z
-
-
-def FC3(model, num_classes):
-    flat1 = Flatten()(model.layers[-1].output)
-    class1 = Dense(128, activation='relu', kernel_initializer='he_uniform')(flat1)
-    output = Dense(num_classes, activation='softmax')(class1)
-
-    return output
-
-
-def build_model(base, forward):
-    model = Sequential()
-    model.add(base)
-    model.add(forward)
     return model
 
 
@@ -98,6 +86,43 @@ def multi_model2(audionet, resnet, num_classes):
     return model
 
 
+def FC(num_classes):
+    model = Sequential()
+    model.add(Flatten())
+    # model.add(Dense(2048, activation='relu'))
+    model.add(Dense(1024, activation='relu'))
+    model.add(Dropout(0.2))
+    model.add(Dense(1024, activation='relu'))
+    # model.add(Dropout(0.2))
+    model.add(Dense(num_classes, activation='softmax'))
+    return model
+
+
+def FC2(merge, num_classes):
+    z = Flatten(name='flatten_A')(merge)
+    z = Dense(64, activation='relu', name='dense_X')(z)
+    z = Dropout(0.2, name='dropout_X')(z)
+    z = Dense(64, activation='relu', name='dense_Y')(z)
+    # z = Dropout(0.2, name='dropout_Y')(z)
+    z = Dense(num_classes, activation='softmax', name='dense_Z')(z)
+    return z
+
+
+def FC3(model, num_classes):
+    flat1 = Flatten()(model.layers[-1].output)
+    class1 = Dense(128, activation='relu', kernel_initializer='he_uniform')(flat1)
+    output = Dense(num_classes, activation='softmax')(class1)
+
+    return output
+
+
+def build_model(base, forward):
+    model = Sequential()
+    model.add(base)
+    model.add(forward)
+    return model
+
+
 def audio_net(input_shape, num_classes):
     model = Sequential()
 
@@ -122,7 +147,7 @@ def audio_net2(input_shape, num_classes):
     model.add(Dropout(0.5, name='dropout_A'))
     model.add(Dense(1024, activation="relu", name='dense_B'))
     model.add(Dropout(0.5, name='dropout_B'))
-    model.add(Dense(128, activation="relu", name='dense_C'))
+    model.add(Dense(64, activation="relu", name='dense_C'))
     model.add(Dropout(0.5, name='dropout_C'))
     model.add(Dense(num_classes, activation="softmax", name='dense_D'))
 
