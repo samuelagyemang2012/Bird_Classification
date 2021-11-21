@@ -80,7 +80,7 @@ def multi_model(input_tensor1, input_tensor2, input_shape1, input_shape2, num_cl
 def multi_model2(audionet, resnet, num_classes):
     # audionet._name = 'audionet'
     # resnet._name = 'resnet'
-    merge = Add(name='merge_A')([audionet.output, resnet.output])
+    merge = Concatenate(name='concat_A')([audionet.output, resnet.output])
     fc = FC2(merge, num_classes)
     model = Model(inputs=[audionet.input, resnet.input], outputs=fc)
     return model
@@ -147,7 +147,7 @@ def audio_net2(input_shape, num_classes):
     model.add(Dropout(0.5, name='dropout_A'))
     model.add(Dense(1024, activation="relu", name='dense_B'))
     model.add(Dropout(0.5, name='dropout_B'))
-    model.add(Dense(64, activation="relu", name='dense_C'))
+    model.add(Dense(128, activation="relu", name='dense_C'))
     model.add(Dropout(0.5, name='dropout_C'))
     model.add(Dense(num_classes, activation="softmax", name='dense_D'))
 

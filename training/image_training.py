@@ -16,7 +16,7 @@ tf.random.set_seed(40)
 
 EPOCHS = 20
 INPUT_SHAPE = (100, 100, 3)
-BATCH_SIZE = 16
+BATCH_SIZE = 32
 NUM_CLASSES = 3
 VAL_SPLIT = 0.2
 

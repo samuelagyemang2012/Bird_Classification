@@ -2,15 +2,15 @@ image
 *Classification Report*
               precision    recall  f1-score   support
 
-        bird       0.88      0.81      0.84       226
-         dog       0.80      0.68      0.73       188
-         car       0.79      0.99      0.88       186
+        bird       0.92      0.67      0.78       226
+         dog       0.74      0.78      0.76       188
+         car       0.78      0.99      0.87       186
 
-    accuracy                           0.82       600
-   macro avg       0.82      0.83      0.82       600
-weighted avg       0.83      0.82      0.82       600
+    accuracy                           0.80       600
+   macro avg       0.81      0.81      0.80       600
+weighted avg       0.82      0.80      0.80       600
 
-Accuracy: 0.824999988079071
-Recall: 0.825
-Precision: 0.8283362409390891
-F1_score: 0.8207642755032276
+Accuracy: 0.8033333420753479
+Recall: 0.8033333333333333
+Precision: 0.8177912859431041
+F1_score: 0.7994465365772356

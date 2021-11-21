@@ -2,15 +2,15 @@ multi
 *Classification Report*
               precision    recall  f1-score   support
 
-        bird       0.89      0.89      0.89       221
-         dog       0.86      0.86      0.86       206
-         car       0.95      0.95      0.95       173
+        bird       0.92      0.94      0.93       221
+         dog       0.92      0.89      0.91       206
+         car       0.95      0.97      0.96       173
 
-    accuracy                           0.90       600
-   macro avg       0.90      0.90      0.90       600
-weighted avg       0.90      0.90      0.90       600
+    accuracy                           0.93       600
+   macro avg       0.93      0.93      0.93       600
+weighted avg       0.93      0.93      0.93       600
 
-Accuracy: 0.8966666460037231
-Recall: 0.8966666666666666
-Precision: 0.8967768349745093
-F1_score: 0.8967177784320781
+Accuracy: 0.9316666722297668
+Recall: 0.9316666666666666
+Precision: 0.9315475551979976
+F1_score: 0.9314216906296694
