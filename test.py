@@ -209,16 +209,26 @@ import os
 import shutil
 import pandas as pd
 
-data_path = "C:/Users/Administrator/Desktop/car_audio.csv"
-audio_source = "C:/Users/Administrator/Desktop/datasets/urban8k/"
-dest = "C:/Users/Administrator/Desktop/Sam/Multimodal_Fusion/my_coco/audio/car/wav_files/"
+# data_path = "C:/Users/Administrator/Desktop/car_audio.csv"
+# audio_source = "C:/Users/Administrator/Desktop/datasets/urban8k/"
+# dest = "C:/Users/Administrator/Desktop/Sam/Multimodal_Fusion/my_coco/audio/car/wav_files/"
+#
+# df = pd.read_csv(data_path)
+# cc = df[['slice_file_name', 'fold']]
+#
+# files = cc["slice_file_name"].tolist()
+# folds = cc["fold"].tolist()
+#
+# for i, z in enumerate(files):
+#     full_path = audio_source + "fold" + str(folds[i]) + "/" + z
+#     shutil.copy(full_path, dest)
 
-df = pd.read_csv(data_path)
-cc = df[['slice_file_name', 'fold']]
+path = "D:/Datasets/my_coco/images/dog/annotations/"
+dest = "D:/Datasets/my_coco/images/dog/xxx/"
 
-files = cc["slice_file_name"].tolist()
-folds = cc["fold"].tolist()
+files = os.listdir(path)
 
-for i, z in enumerate(files):
-    full_path = audio_source + "fold" + str(folds[i]) + "/" + z
-    shutil.copy(full_path, dest)
+for f in files:
+    full = path + f
+    d = dest + f + ".xml"
+    shutil.copy(full, d)

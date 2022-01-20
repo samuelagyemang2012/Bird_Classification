@@ -9,22 +9,23 @@ from models.model import *
 from numpy.random import seed
 import random
 import tensorflow as tf
+import gc
 
 random.seed(89)
 seed(25)
 tf.random.set_seed(40)
 
 EPOCHS = 20
-INPUT_SHAPE = (100, 100, 3)
+INPUT_SHAPE = (224, 224, 3)
 BATCH_SIZE = 32
 NUM_CLASSES = 3
 VAL_SPLIT = 0.2
 
 # Define paths
-IMG_BASE_PATH = "C:/Users/Administrator/Desktop/Sam/Multimodal_Fusion/my_coco/all/images/"
+IMG_BASE_PATH = "D:/Datasets/my_coco/all/images/"
 TRAIN_DATA_PATH = "../data/image/train.csv"
 TEST_DATA_PATH = "../data/image/test.csv"
-BEST_MODEL_PATH = "C:/Users/Administrator/Desktop/Sam/Multimodal_Fusion/trained_models/resnet.h5"
+BEST_MODEL_PATH = "D:/Datasets/my_coco/trained_models/resnet.h5"
 
 TRAIN_DATA = []
 TRAIN_LABELS = []
@@ -79,6 +80,8 @@ for ttl in test_labels_:
     if ttl == TRUE_LABELS[2]:
         TEST_LABELS.append(2)
 
+gc.collect()
+
 # Normalize data
 print("Normalizing data")
 TRAIN_DATA = np.array(TRAIN_DATA)
@@ -122,17 +125,6 @@ input_tensor = Input(shape=INPUT_SHAPE)
 
 model = cnn(INPUT_SHAPE, NUM_CLASSES)
 
-# base_ = resnet_50(input_tensor, INPUT_SHAPE, 'imagenet')
-# x = Dense(NUM_CLASSES, activation='softmax', name='dense_Q')(base_.output)
-# model = Model(inputs=base_.input, outputs=x)
-
-# x = MaxPooling2D(name='avg_pool_B')(x)
-# x = Flatten(name='flatten_X')(x)
-# x = Dense(1024, activation='relu', name='dense_Q')(x)
-# x = Dropout(0.2, name='dropout_E')(x)
-# x = Dense(256, activation='relu', name='dense_W')(x)
-# # x = Dense(128, activation='relu', name='dense_R')(x)
-
 opts = Adam(learning_rate=0.0001)
 model.compile(optimizer=opts, loss="categorical_crossentropy", metrics=['accuracy'])
 
@@ -144,6 +136,7 @@ history = model.fit(train_gen,
                     # steps_per_epoch=len(TRAIN_DATA) // BATCH_SIZE,
                     epochs=EPOCHS)
 
+gc.collect()
 # Evaluate model
 name = 'image'
 print("Evaluating model on " + str(len(TEST_DATA)) + " images")

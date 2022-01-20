@@ -5,7 +5,7 @@ import pandas as pd
 
 SOURCE_PATH = "C:/Users/Administrator/Desktop/Sam/Multimodal_Fusion/my_coco/images/val/"
 SUBSET = "val"
-DETECTOR_PATH = "../detector/bboxes/"
+DETECTOR_PATH = "../detectors/bboxes/"
 
 IMAGES = []
 BBOX = []

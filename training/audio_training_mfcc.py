@@ -19,7 +19,8 @@ VAL_SPLIT = 0.2
 # Define paths
 TRAIN_DATA_PATH = "../data/audio/train.csv"
 TEST_DATA_PATH = "../data/audio/test.csv"
-BEST_MODEL_PATH = "C:/Users/Administrator/Desktop/Sam/Multimodal_Fusion/trained_models/audionet.h5"
+BEST_MODEL_PATH = "D:/Datasets/my_coco/trained_models/audionet.h5"
+# "C:/Users/Administrator/Desktop/Sam/Multimodal_Fusion/trained_models/audionet.h5"
 
 TRAIN_LABELS = []
 TEST_LABELS = []
@@ -62,10 +63,11 @@ for tt in test_labels_:
         TEST_LABELS.append(2)
 
 # Normalize data
-print("Normalizing data")
+print("Convert data to numpy array")
 TRAIN_DATA = np.array(train_)
 TEST_DATA = np.array(test_)
 
+print('Converting data to float')
 TRAIN_DATA = TRAIN_DATA.astype('float32')
 TEST_DATA = TEST_DATA.astype('float32')
 

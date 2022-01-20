@@ -5,9 +5,9 @@ import numpy as np
 import cv2
 from tqdm import tqdm
 
-audionet_model_path = "C:/Users/Administrator/Desktop/Sam/Multimodal_Fusion/trained_models/audionet.h5"
-image_model_path = "C:/Users/Administrator/Desktop/Sam/Multimodal_Fusion/trained_models/resnet_80.h5"
-multi_model_path = "C:/Users/Administrator/Desktop/Sam/Multimodal_Fusion/trained_models/multimodal.h5"
+audionet_model_path = "D:/Datasets/my_coco/trained_models/audionet.h5"
+image_model_path = "D:/Datasets/my_coco/trained_models/resnet.h5"
+multi_model_path = "D:/Datasets/my_coco/trained_models//multimodal.h5"
 
 audionet = load_model(audionet_model_path)
 audionet.trainable = False
@@ -55,7 +55,8 @@ audio_mfcc = '''[-3.27780884e+02  1.21065681e+02 -4.00812073e+01 -4.06821175e+01
  -1.35454893e+00  1.06728697e+00 -2.02247739e+00  2.17973781e+00
   2.66387272e+00  2.81490564e+00 -2.13995978e-01  4.38734554e-02
  -2.52553010e+00 -3.41716957e+00 -2.28755403e+00 -5.28283834e-01]'''
-img_path = "C:/Users/Administrator/Desktop/Sam/Multimodal_Fusion/my_coco/all/images/n02085782_82.jpg"
+
+img_path = "D:/Datasets/my_coco/all/images/n02085782_82.jpg"
 
 # Process mfcc and image
 prep_mfcc = preprocess_mfcc(audio_mfcc)
@@ -79,12 +80,13 @@ print("confidence: ", round((multi_pred.max() * 100), 2))
 print("")
 
 # Batch prediction
+print("Batch Prediction")
 df = pd.read_csv('../data/multi/test.csv')
 
 mfccs = df['mfcc'].tolist()
 images = df['image'].tolist()
 true_labels = df['class'].tolist()
-img_base = "C:/Users/Administrator/Desktop/Sam/Multimodal_Fusion/my_coco/all/images/"
+img_base = "D:/Datasets/my_coco/all/images/"
 
 total1 = 0
 total2 = 0

@@ -21,10 +21,10 @@ NUM_CLASSES = 3
 VAL_SPLIT = 0.1
 
 # Define paths
-IMG_BASE_PATH = "C:/Users/Administrator/Desktop/Sam/Multimodal_Fusion/my_coco/all/images/"
+IMG_BASE_PATH = "D:/Datasets/my_coco/all/images/"
 MULTI_TRAIN_DATA_PATH = "../data/multi/train.csv"
 MULTI_TEST_DATA_PATH = "../data/multi/test.csv"
-BEST_MODEL_PATH = "C:/Users/Administrator/Desktop/Sam/Multimodal_Fusion/trained_models/multimodal.h5"
+BEST_MODEL_PATH = "D:/Datasets/my_coco/trained_models/multimodal.h5"
 
 TRUE_LABELS = ["bird", "dog", "car"]
 LABELS = [0, 1, 2]
@@ -165,8 +165,8 @@ callbacks = create_callbacks()  # BEST_MODEL_PATH + name + file_ext, "loss", "mi
 # Building model
 print("Building model")
 
-audionet_model_path = "C:/Users/Administrator/Desktop/Sam/Multimodal_Fusion/trained_models/audionet_89.h5"
-image_model_path = "C:/Users/Administrator/Desktop/Sam/Multimodal_Fusion/trained_models/resnet_80.h5"
+audionet_model_path = "D:/Datasets/my_coco/trained_models/audionet.h5"
+image_model_path = "D:/Datasets/my_coco/trained_models/resnet.h5"
 
 audionet = load_model(audionet_model_path)
 audionet.trainable = False
