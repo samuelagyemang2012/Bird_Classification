@@ -41,6 +41,8 @@ def data_to_csv(data, output_file):
     df.to_csv(output_file, index=False)
 
 
+
+
 # for file in os.listdir(SOURCE_PATH):
 #     if file.endswith(".jpg") or file.endswith(".png"):
 #         IMAGES.append(file)

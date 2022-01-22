@@ -1,5 +1,6 @@
 import pandas as pd
 import os
+from pas_voc_to_custom import get_bbox
 import shutil
 import time
 
@@ -61,11 +62,13 @@ all_images = []
 all_audio = []
 
 for j, i in enumerate(images_list):
-    all_images.append([i, images_labels[j], annotations_list[j]])
+    xmin, ymin, xmax, ymax = get_bbox("D:/Datasets/my_coco/all/annotations/" + annotations_list[j])
+    all_images.append([i, images_labels[j], xmin, xmax, ymin, ymax])
     all_audio.append([audio_list[j], audio_labels[j]])
 
-all_image_df = pd.DataFrame(all_images, columns=['file', 'class', 'bbox'], index=None)
+all_image_df = pd.DataFrame(all_images, columns=['file', 'class', 'xmin', 'xmax', 'ymin', 'ymax'], index=None)
 all_audio_df = pd.DataFrame(all_audio, columns=['file', 'class'], index=None)
+
 
 all_image_df.to_csv(DEST_PATH + 'image_data.csv', index=False)
 all_audio_df.to_csv(DEST_PATH + 'audio_data.csv', index=False)
